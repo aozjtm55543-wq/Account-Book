@@ -1,0 +1,18 @@
+POST http://localhost:8080/api/records
+Content-Type: application.json
+
+{
+    "type": "EXPENDITURE",
+    "amount": 4500,
+    "category": "FOOD",
+    "date": "2026-03-15",
+    "memo": "아메리카노"
+}
+
+{
+    "type": "EXPENDITURE".
+    "amount": 30000,
+    "category": "Accessory"
+    "date": "2026-03-13",
+    "memo": "반지"
+}
