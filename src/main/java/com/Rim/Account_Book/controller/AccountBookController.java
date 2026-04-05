@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class AccountBookController {
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody AccountBook record) {
         Long id = accountBookService.saveRecord(record);
-        return ResponseEntity.ok(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping("/{id}")
@@ -42,13 +43,13 @@ public class AccountBookController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody AccountBook record) {
         accountBookService.updateRecord(id, record);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         accountBookService.deleteRecord(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/statistics")
@@ -96,5 +97,4 @@ public class AccountBookController {
         return ResponseEntity.ok(accountBookService.searchByAmount(min, max, sort));
     }
 }
-
 

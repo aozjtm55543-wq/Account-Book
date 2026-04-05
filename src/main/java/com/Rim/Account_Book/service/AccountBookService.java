@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AccountBookService {
 
     private final AccountBookRepository accountBookRepository;
@@ -25,13 +26,11 @@ public class AccountBookService {
         return accountBookRepository.save(record).getId();
     }
 
-    @Transactional(readOnly = true)
     public AccountBook getRecord(Long id) {
         return accountBookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 내역이 없습니다. id = " + id));
     }
 
-    @Transactional(readOnly = true)
     public List<AccountBook> getAllRecords() {
         return accountBookRepository.findAll();
     }
@@ -53,19 +52,16 @@ public class AccountBookService {
         accountBookRepository.delete(record);
         }
 
-    @Transactional(readOnly = true)
     public List<CategorySumDto> getCategoryStatistics() {
         return accountBookRepository.findCategorySums();
     }
 
-    @Transactional(readOnly = true)
     public Long getTotalAmountByPeriod(LocalDate startDate, LocalDate endDate) {
         Long total = accountBookRepository.sumAmountByDateBetween(startDate, endDate);
         return total != null ? total : 0L;
     }
 
     @Cacheable(value = "categoryStats", key = "#startDate.toString() + #endDate.toString() + #sortType")
-    @Transactional(readOnly = true)
     public List<CategorySumDto> getCategoryStatsByPeriod(LocalDate startDate, LocalDate endDate, String sortType) {
         List<CategorySumDto> stats = accountBookRepository.findCategorySumsByPeriod(startDate, endDate);
 
@@ -85,23 +81,19 @@ public class AccountBookService {
         return stats;
     }
 
-    @Transactional(readOnly = true)
     public List<CategorySumDto> getTodayCategoryStats() {
         LocalDate today = LocalDate.now();
         return accountBookRepository.findCategorySumsByPeriod(today, today);
     }
 
-    @Transactional(readOnly = true)
     public List<AccountBook> searchByMemo(String keyword) {
         return accountBookRepository.findByMemoContaining(keyword);
     }
 
-    @Transactional(readOnly = true)
     public List<AccountBook> searchByCategory(String category) {
         return accountBookRepository.findByCategory(category);
     }
 
-    @Transactional(readOnly = true)
     public List<AccountBook> searchByAmount(Long minAmount, Long maxAmount, String sortType) {
         Sort sort = Sort.by(Sort.Direction.DESC, "amount");
 
@@ -112,4 +104,5 @@ public class AccountBookService {
         return accountBookRepository.findByAmountBetween(minAmount, maxAmount, sort);
     }
 }
+
 
